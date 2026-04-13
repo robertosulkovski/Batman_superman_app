@@ -9,38 +9,32 @@ import os
 
 st.set_page_config(layout="centered")
 
-# ===== CSS =====
+# ===== CSS LIGHT THEME =====
 st.markdown("""
 <style>
 
 /* ===== BASE ===== */
 .stApp {
-    background-color: #0B0F19;
-    color: #E5E7EB;
+    background-color: #F9FAFB;
+    color: #111827;
     font-family: 'Inter', sans-serif;
 }
 
 /* TITULOS */
 h1 {
     font-weight: 700;
-    letter-spacing: -0.5px;
 }
 
 h2, h3 {
-    color: #E5E7EB;
+    color: #111827;
 }
 
 /* ===== FILE UPLOADER ===== */
 section[data-testid="stFileUploader"] {
-    background: #111827 !important;
-    border: 1px dashed #1F2937 !important;
+    background: white !important;
+    border: 1px dashed #D1D5DB !important;
     border-radius: 12px !important;
     padding: 14px !important;
-}
-
-section[data-testid="stFileUploader"] * {
-    background: transparent !important;
-    color: #9CA3AF !important;
 }
 
 section[data-testid="stFileUploader"]:hover {
@@ -49,10 +43,10 @@ section[data-testid="stFileUploader"]:hover {
 
 /* ===== INPUT ===== */
 input {
-    background: #111827 !important;
-    border: 1px solid #1F2937 !important;
+    background: white !important;
+    border: 1px solid #D1D5DB !important;
     border-radius: 10px !important;
-    color: #E5E7EB !important;
+    color: #111827 !important;
     padding: 12px !important;
 }
 
@@ -74,17 +68,17 @@ input:focus {
     background: #2563EB;
 }
 
-/* ===== RESULT CARD ===== */
+/* ===== CARD ===== */
 .result-card {
-    background: #111827;
+    background: white;
     border-radius: 14px;
     padding: 20px;
-    border: 1px solid #1F2937;
+    border: 1px solid #E5E7EB;
 }
 
 /* ===== PROGRESS ===== */
 .progress-bar {
-    background: #1F2937;
+    background: #E5E7EB;
     border-radius: 6px;
     overflow: hidden;
     height: 10px;
@@ -99,7 +93,7 @@ input:focus {
 /* ===== SKELETON ===== */
 .skeleton {
     animation: pulse 1.2s infinite;
-    background: linear-gradient(90deg, #111827 25%, #1F2937 50%, #111827 75%);
+    background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
     background-size: 200% 100%;
     border-radius: 12px;
     height: 280px;

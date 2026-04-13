@@ -68,15 +68,30 @@ div[data-testid="stForm"] {
     border: 1px solid #E2E8F0;
 }
 
-/* BOTÕES (IGUAIS) */
-.stButton>button {
-    background: #2563EB;
-    color: white;
-    border-radius: 10px;
+st.markdown("""
+<style>
+
+/* TODOS OS BOTÕES */
+button[kind="primary"],
+button[kind="secondary"],
+.stButton > button,
+.stForm button {
+    background-color: #E2E8F0 !important;
+    color: #0F172A !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 10px !important;
     font-weight: 600;
     padding: 10px 18px;
-    border: none;
 }
+
+/* HOVER */
+button:hover {
+    background-color: #CBD5E1 !important;
+    color: #0F172A !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 .stButton>button:hover {
     background: #1D4ED8;

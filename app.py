@@ -34,24 +34,6 @@ st.markdown("""
     color: #0F172A;
 }
 
-/* TITULOS */
-h1, h2, h3 {
-    color: #0F172A;
-}
-
-/* TEXTO */
-p {
-    color: #475569;
-}
-
-/* UPLOADER */
-section[data-testid="stFileUploader"] {
-    background: #FFFFFF !important;
-    border: 1px dashed #CBD5E1 !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-}
-
 /* INPUT */
 .stTextInput > div {
     background: #FFFFFF !important;
@@ -68,14 +50,16 @@ div[data-testid="stForm"] {
     border: 1px solid #E2E8F0;
 }
 
-st.markdown("""
-<style>
+/* UPLOADER */
+section[data-testid="stFileUploader"] {
+    background: #FFFFFF !important;
+    border: 1px dashed #CBD5E1 !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+}
 
-/* TODOS OS BOTÕES */
-button[kind="primary"],
-button[kind="secondary"],
-.stButton > button,
-.stForm button {
+/* BOTÕES (TODOS) */
+button {
     background-color: #E2E8F0 !important;
     color: #0F172A !important;
     border: 1px solid #CBD5E1 !important;
@@ -84,20 +68,11 @@ button[kind="secondary"],
     padding: 10px 18px;
 }
 
-/* HOVER */
 button:hover {
     background-color: #CBD5E1 !important;
-    color: #0F172A !important;
 }
 
-</style>
-""", unsafe_allow_html=True)
-
-.stButton>button:hover {
-    background: #1D4ED8;
-}
-
-/* CARD RESULTADO */
+/* RESULT CARD */
 .result-card {
     background: #FFFFFF;
     border-radius: 14px;
@@ -116,20 +91,6 @@ button:hover {
     background: #2563EB;
     height: 100%;
     border-radius: 6px;
-}
-
-/* SKELETON */
-.skeleton {
-    animation: pulse 1.2s infinite;
-    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
-    background-size: 200% 100%;
-    border-radius: 12px;
-    height: 250px;
-}
-
-@keyframes pulse {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
 }
 
 </style>

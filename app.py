@@ -13,78 +13,101 @@ st.set_page_config(layout="centered")
 st.markdown("""
 <style>
 
-/* FUNDO */
+/* ===== BASE ===== */
 .stApp {
-    background: radial-gradient(circle at top, #0f172a, #020617);
-    color: white;
+    background-color: #0B0F19;
+    color: #E5E7EB;
+    font-family: 'Inter', sans-serif;
 }
 
-/* SKELETON */
-.skeleton {
-    animation: pulse 1.2s infinite;
-    background: linear-gradient(90deg, #1f1f1f 25%, #2f2f2f 50%, #1f1f1f 75%);
-    background-size: 200% 100%;
-    border-radius: 16px;
-    height: 300px;
+/* TITULOS */
+h1 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
-@keyframes pulse {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+h2, h3 {
+    color: #E5E7EB;
 }
 
-/* FILE UPLOADER */
+/* ===== FILE UPLOADER ===== */
 section[data-testid="stFileUploader"] {
-    background: #020617 !important;
-    border: 1px dashed #334155 !important;
-    border-radius: 14px !important;
+    background: #111827 !important;
+    border: 1px dashed #1F2937 !important;
+    border-radius: 12px !important;
     padding: 14px !important;
 }
 
 section[data-testid="stFileUploader"] * {
     background: transparent !important;
-    color: #cbd5e1 !important;
+    color: #9CA3AF !important;
 }
 
-/* INPUT */
+section[data-testid="stFileUploader"]:hover {
+    border: 1px dashed #3B82F6 !important;
+}
+
+/* ===== INPUT ===== */
 input {
-    background: #020617 !important;
-    border: 1px solid #334155 !important;
-    border-radius: 12px !important;
-    color: white !important;
+    background: #111827 !important;
+    border: 1px solid #1F2937 !important;
+    border-radius: 10px !important;
+    color: #E5E7EB !important;
     padding: 12px !important;
 }
 
-/* BOTÃO */
+input:focus {
+    border: 1px solid #3B82F6 !important;
+}
+
+/* ===== BOTÃO ===== */
 .stButton>button {
-    background: linear-gradient(135deg, #00FF9C, #00C2FF);
-    color: black;
-    font-weight: bold;
-    border-radius: 12px;
+    background: #3B82F6;
+    color: white;
+    font-weight: 600;
+    border-radius: 10px;
     border: none;
     padding: 10px 18px;
 }
 
-/* RESULT CARD */
-.result-card {
-    background: linear-gradient(145deg, #020617, #0f172a);
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid #1f2937;
+.stButton>button:hover {
+    background: #2563EB;
 }
 
-/* PROGRESS */
+/* ===== RESULT CARD ===== */
+.result-card {
+    background: #111827;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #1F2937;
+}
+
+/* ===== PROGRESS ===== */
 .progress-bar {
-    background: #2a2a2a;
-    border-radius: 8px;
+    background: #1F2937;
+    border-radius: 6px;
     overflow: hidden;
-    height: 12px;
-    margin-bottom: 10px;
+    height: 10px;
+    margin-bottom: 12px;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #00FF9C, #00CFFF);
+    background: #3B82F6;
+}
+
+/* ===== SKELETON ===== */
+.skeleton {
+    animation: pulse 1.2s infinite;
+    background: linear-gradient(90deg, #111827 25%, #1F2937 50%, #111827 75%);
+    background-size: 200% 100%;
+    border-radius: 12px;
+    height: 280px;
+}
+
+@keyframes pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 </style>
@@ -104,7 +127,7 @@ if "history" not in st.session_state:
 if "image" not in st.session_state:
     st.session_state.image = None
 
-# ===== LOAD MODEL =====
+# ===== MODEL =====
 @st.cache_resource
 def load_model():
     if not os.path.exists("model.pth"):
@@ -132,7 +155,7 @@ st.subheader("📥 Entrada de imagem")
 uploaded_file = st.file_uploader("Upload imagem", type=["jpg", "png", "jpeg"])
 image_url = st.text_input("Ou cole a URL")
 
-# ===== CLEAR BUTTON =====
+# ===== CLEAR =====
 if st.button("🧹 Limpar histórico"):
     st.session_state.history = []
     st.session_state.image = None
@@ -140,12 +163,10 @@ if st.button("🧹 Limpar histórico"):
 
 image = st.session_state.image
 
-# upload
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
     st.session_state.image = image
 
-# url
 elif image_url:
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -164,7 +185,7 @@ elif image_url:
 if image:
     img = transform(image).unsqueeze(0)
 
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1,1])
 
     with col1:
         st.image(image, use_column_width=True)
@@ -184,17 +205,17 @@ if image:
         conf = confidence.item() * 100
 
         if conf > 80:
-            color = "#00FF9C"
+            color = "#22C55E"
             status = "Alta confiança"
         elif conf > 60:
-            color = "#FFD166"
+            color = "#F59E0B"
             status = "Média confiança"
         else:
-            color = "#FF4B4B"
+            color = "#EF4444"
             status = "Baixa confiança"
 
         st.markdown(f"""
-        <div class="result-card" style="border-left: 6px solid {color}">
+        <div class="result-card" style="border-left: 5px solid {color}">
             <h3>🧠 {result}</h3>
             <p>📊 {conf:.2f}%</p>
             <p style="color:{color}">{status}</p>
@@ -220,6 +241,6 @@ if st.session_state.history:
     st.subheader("🕓 Histórico")
 
     for img_hist, res, conf in reversed(st.session_state.history[-5:]):
-        c1, c2 = st.columns([1, 2])
+        c1, c2 = st.columns([1,2])
         c1.image(img_hist, width=100)
         c2.write(f"**{res}** ({conf:.1f}%)")

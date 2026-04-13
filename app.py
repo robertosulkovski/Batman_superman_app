@@ -116,7 +116,14 @@ transform = transforms.Compose([
 # ===== INPUT =====
 st.subheader("📥 Entrada de imagem")
 
-uploaded_file = st.file_uploader("Upload imagem", type=["jpg", "png", "jpeg"])
+if "uploader_key" not in st.session_state:
+    st.session_state.uploader_key = 0
+
+uploaded_file = st.file_uploader(
+    "Upload imagem",
+    type=["jpg", "png", "jpeg"],
+    key=st.session_state.uploader_key
+)
 
 # ===== URL FORM (ENTER FUNCIONA) =====
 with st.form("url_form"):

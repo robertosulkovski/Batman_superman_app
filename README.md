@@ -2,6 +2,10 @@
 
 👉 https://batman-superman-ai.streamlit.app/
 
+## 📸 Preview
+
+![App](./assets/screenshot.png)
+
 # 🦇 Batman vs Superman AI
 
 Este projeto consiste em uma aplicação de Machine Learning capaz de classificar imagens entre Batman e Superman utilizando Deep Learning.

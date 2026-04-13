@@ -13,13 +13,13 @@ st.set_page_config(layout="centered")
 st.markdown("""
 <style>
 
-/* ===== FUNDO ===== */
+/* FUNDO */
 .stApp {
     background: radial-gradient(circle at top, #0f172a, #020617);
     color: white;
 }
 
-/* ===== SKELETON ===== */
+/* SKELETON */
 .skeleton {
     animation: pulse 1.2s infinite;
     background: linear-gradient(90deg, #1f1f1f 25%, #2f2f2f 50%, #1f1f1f 75%);
@@ -33,13 +33,12 @@ st.markdown("""
     100% { background-position: -200% 0; }
 }
 
-/* ===== FILE UPLOADER ===== */
+/* FILE UPLOADER */
 section[data-testid="stFileUploader"] {
-    background: #0f172a !important;
-    border: 1px solid #1f2937 !important;
+    background: #020617 !important;
+    border: 1px dashed #334155 !important;
     border-radius: 14px !important;
     padding: 14px !important;
-    transition: 0.3s;
 }
 
 section[data-testid="stFileUploader"] * {
@@ -47,20 +46,16 @@ section[data-testid="stFileUploader"] * {
     color: #cbd5e1 !important;
 }
 
-section[data-testid="stFileUploader"]:hover {
-    border: 1px solid #00FF9C !important;
-    box-shadow: 0 0 20px rgba(0,255,156,0.15);
-}
-
-/* ===== INPUT ===== */
+/* INPUT */
 input {
-    background-color: #0f172a !important;
-    border: 1px solid #1f2937 !important;
-    border-radius: 10px !important;
+    background: #020617 !important;
+    border: 1px solid #334155 !important;
+    border-radius: 12px !important;
     color: white !important;
+    padding: 12px !important;
 }
 
-/* ===== BOTÃO ===== */
+/* BOTÃO */
 .stButton>button {
     background: linear-gradient(135deg, #00FF9C, #00C2FF);
     color: black;
@@ -70,25 +65,21 @@ input {
     padding: 10px 18px;
 }
 
-.stButton>button:hover {
-    transform: scale(1.05);
-}
-
-/* ===== RESULT CARD ===== */
+/* RESULT CARD */
 .result-card {
-    background: #0f172a;
+    background: linear-gradient(145deg, #020617, #0f172a);
     border-radius: 16px;
     padding: 20px;
     border: 1px solid #1f2937;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* ===== BARRA CUSTOM ===== */
+/* PROGRESS */
 .progress-bar {
     background: #2a2a2a;
     border-radius: 8px;
     overflow: hidden;
     height: 12px;
+    margin-bottom: 10px;
 }
 
 .progress-fill {
@@ -110,7 +101,10 @@ st.caption("Classificador de imagens com Deep Learning (ResNet18)")
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# ===== MODEL =====
+if "image" not in st.session_state:
+    st.session_state.image = None
+
+# ===== LOAD MODEL =====
 @st.cache_resource
 def load_model():
     if not os.path.exists("model.pth"):
@@ -138,15 +132,18 @@ st.subheader("📥 Entrada de imagem")
 uploaded_file = st.file_uploader("Upload imagem", type=["jpg", "png", "jpeg"])
 image_url = st.text_input("Ou cole a URL")
 
+# ===== CLEAR BUTTON =====
 if st.button("🧹 Limpar histórico"):
     st.session_state.history = []
+    st.session_state.image = None
     st.rerun()
 
-image = None
+image = st.session_state.image
 
 # upload
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
+    st.session_state.image = image
 
 # url
 elif image_url:
@@ -156,6 +153,7 @@ elif image_url:
 
         if response.status_code == 200 and "image" in response.headers.get("Content-Type", ""):
             image = Image.open(BytesIO(response.content)).convert("RGB")
+            st.session_state.image = image
         else:
             st.error("❌ URL inválida")
 
@@ -166,7 +164,7 @@ elif image_url:
 if image:
     img = transform(image).unsqueeze(0)
 
-    col1, col2 = st.columns([1,1])
+    col1, col2 = st.columns([1, 1])
 
     with col1:
         st.image(image, use_column_width=True)
@@ -185,7 +183,6 @@ if image:
         result = CLASSES[predicted.item()]
         conf = confidence.item() * 100
 
-        # cor
         if conf > 80:
             color = "#00FF9C"
             status = "Alta confiança"
@@ -196,7 +193,6 @@ if image:
             color = "#FF4B4B"
             status = "Baixa confiança"
 
-        # CARD
         st.markdown(f"""
         <div class="result-card" style="border-left: 6px solid {color}">
             <h3>🧠 {result}</h3>
@@ -224,6 +220,6 @@ if st.session_state.history:
     st.subheader("🕓 Histórico")
 
     for img_hist, res, conf in reversed(st.session_state.history[-5:]):
-        c1, c2 = st.columns([1,2])
+        c1, c2 = st.columns([1, 2])
         c1.image(img_hist, width=100)
         c2.write(f"**{res}** ({conf:.1f}%)")

@@ -62,7 +62,6 @@ col1, col2 = st.columns(2)
 uploaded_file = col1.file_uploader("📂 Upload", type=["jpg", "png", "jpeg"])
 image_url = col2.text_input("🌐 URL")
 
-pasted_image = st.camera_input("📋 Colar imagem")
 
 # ===== CLEAR BUTTON =====
 if st.button("🧹 Limpar histórico"):

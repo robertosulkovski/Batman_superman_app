@@ -9,7 +9,7 @@ import os
 
 st.set_page_config(layout="centered")
 
-#Aviso
+# ===== AVISO =====
 st.markdown("""
 <div style="
     background: #FFFBEB;
@@ -24,165 +24,60 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# ===== CSS =====
+# ===== CSS LIMPO =====
 st.markdown("""
 <style>
-
-/* ===== FUNDO ===== */
 .stApp {
     background-color: #F1F5F9;
     color: #0F172A;
 }
 
-/* ===== TITULO ===== */
-h1 {
-    font-weight: 700;
+h1, h2, h3 {
+    color: #0F172A;
 }
 
-/* ===== SUBTEXTO ===== */
 p {
     color: #475569;
 }
 
-/* ===== UPLOADER ===== */
+/* UPLOADER */
 section[data-testid="stFileUploader"] {
     background: #FFFFFF !important;
     border: 1px dashed #CBD5E1 !important;
     border-radius: 14px !important;
     padding: 16px !important;
-    transition: 0.2s;
 }
 
 section[data-testid="stFileUploader"]:hover {
     border: 1px dashed #2563EB !important;
-    background: #F8FAFC !important;
 }
 
-/* REMOVE CINZA INTERNO */
+/* REMOVE FUNDO CINZA */
 section[data-testid="stFileUploader"] div {
     background: transparent !important;
 }
 
-/* ===== INPUT URL ===== */
+/* INPUT */
 input {
     background: #FFFFFF !important;
     border: 1px solid #CBD5E1 !important;
     border-radius: 10px !important;
     padding: 12px !important;
-    color: #0F172A !important;
 }
 
-input:focus {
-    border: 1px solid #2563EB !important;
-    outline: none !important;
-}
-
-/* ===== BOTÃO ===== */
+/* BOTÃO */
 .stButton>button {
     background: #2563EB;
     color: white;
     border-radius: 10px;
-    padding: 10px 18px;
     font-weight: 600;
-    border: none;
 }
 
 .stButton>button:hover {
     background: #1D4ED8;
 }
 
-/* ===== CARD INPUT (URL BOX) ===== */
-.stTextInput {
-    background: #FFFFFF;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #E2E8F0;
-}
-
-/* ===== RESULT CARD ===== */
-.result-card {
-    background: #FFFFFF;
-    border-radius: 14px;
-    padding: 20px;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-/* ===== PROGRESS ===== */
-.stProgress > div > div {
-    background-color: #2563EB !important;
-}
-
-/* ===== AVISO ===== */
-.warning-box {
-    background: #FFFBEB;
-    border: 1px solid #FDE68A;
-    color: #92400E;
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-/* ===== REMOVE FUNDO CINZA DO STREAMLIT ===== */
-.block-container {
-    padding-top: 2rem;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
-/* ===== BASE ===== */
-.stApp {
-    background-color: #F8FAFC;
-    color: #0F172A;
-}
-
-/* TITULOS */
-h1, h2, h3 {
-    color: #0F172A;
-}
-
-/* ===== UPLOADER ===== */
-section[data-testid="stFileUploader"] {
-    background: #FFFFFF !important;
-    border: 1px dashed #CBD5F5 !important;
-    border-radius: 12px !important;
-    padding: 14px !important;
-}
-
-section[data-testid="stFileUploader"]:hover {
-    border: 1px dashed #2563EB !important;
-}
-
-/* ===== INPUT ===== */
-input {
-    background: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    color: #0F172A !important;
-    padding: 12px !important;
-}
-
-input:focus {
-    border: 1px solid #2563EB !important;
-}
-
-/* ===== BOTÃO ===== */
-.stButton>button {
-    background: #2563EB;
-    color: white;
-    font-weight: 600;
-    border-radius: 10px;
-    border: none;
-}
-
-.stButton>button:hover {
-    background: #1D4ED8;
-}
-
-/* ===== CARD ===== */
+/* CARD */
 .result-card {
     background: #FFFFFF;
     border-radius: 14px;
@@ -190,7 +85,7 @@ input:focus {
     border: 1px solid #E2E8F0;
 }
 
-/* ===== PROGRESS ===== */
+/* PROGRESS */
 .progress-bar {
     background: #E2E8F0;
     border-radius: 6px;
@@ -199,19 +94,26 @@ input:focus {
 
 .progress-fill {
     background: #2563EB;
+    height: 100%;
+    border-radius: 6px;
 }
 
-/* ===== SKELETON ===== */
+/* SKELETON */
 .skeleton {
     animation: pulse 1.2s infinite;
     background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
     background-size: 200% 100%;
     border-radius: 12px;
-    height: 280px;
+    height: 250px;
 }
 
+@keyframes pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
 </style>
 """, unsafe_allow_html=True)
+
 # ===== CONFIG =====
 MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
 CLASSES = ["Batman", "Superman"]
@@ -225,6 +127,9 @@ if "history" not in st.session_state:
 
 if "image" not in st.session_state:
     st.session_state.image = None
+
+if "uploader_key" not in st.session_state:
+    st.session_state.uploader_key = 0
 
 # ===== MODEL =====
 @st.cache_resource
@@ -251,16 +156,13 @@ transform = transforms.Compose([
 # ===== INPUT =====
 st.subheader("📥 Entrada de imagem")
 
-if "uploader_key" not in st.session_state:
-    st.session_state.uploader_key = 0
-
 uploaded_file = st.file_uploader(
     "Upload imagem",
     type=["jpg", "png", "jpeg"],
     key=st.session_state.uploader_key
 )
 
-# ===== URL FORM (ENTER FUNCIONA) =====
+# ===== FORM URL =====
 with st.form("url_form"):
     image_url = st.text_input("Ou cole a URL da imagem")
     submit_url = st.form_submit_button("🔎 Carregar imagem")
@@ -269,12 +171,12 @@ with st.form("url_form"):
 if st.button("🧹 Limpar histórico"):
     st.session_state.history = []
     st.session_state.image = None
+    st.session_state.uploader_key += 1
     st.rerun()
 
-# ===== PRIORIDADE: UPLOAD > URL =====
+# ===== LOAD IMAGE =====
 if uploaded_file:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.session_state.image = image
+    st.session_state.image = Image.open(uploaded_file).convert("RGB")
 
 elif submit_url and image_url:
     try:
@@ -282,15 +184,13 @@ elif submit_url and image_url:
         response = requests.get(image_url, headers=headers, timeout=10)
 
         if response.status_code == 200 and "image" in response.headers.get("Content-Type", ""):
-            image = Image.open(BytesIO(response.content)).convert("RGB")
-            st.session_state.image = image
+            st.session_state.image = Image.open(BytesIO(response.content)).convert("RGB")
         else:
             st.error("❌ URL inválida")
 
-    except Exception as e:
+    except:
         st.error("❌ Erro ao carregar imagem")
 
-# ===== USAR IMAGEM SALVA =====
 image = st.session_state.image
 
 # ===== PREDICTION =====
@@ -346,7 +246,7 @@ if image:
             </div>
             """, unsafe_allow_html=True)
 
-    # evitar duplicação no histórico
+    # evitar duplicação
     if not st.session_state.history or st.session_state.history[-1][0] != image:
         st.session_state.history.append((image, result, conf))
 

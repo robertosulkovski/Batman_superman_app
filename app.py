@@ -4,6 +4,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 import requests
 from io import BytesIO
+from torchvision import models
 
 # ===== CONFIG =====
 MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
@@ -13,15 +14,13 @@ CLASSES = ["Batman", "Superman"]
 # ===== DOWNLOAD MODEL =====
 @st.cache_resource
 def load_model():
-    response = requests.get(MODEL_URL)
+    response = requests.get(MODEL_URL, timeout=30)
     with open("model.pth", "wb") as f:
         f.write(response.content)
 
-    model = torch.nn.Sequential(
-        torch.nn.Flatten(),
-        torch.nn.Linear(3 * 224 * 224, 2)
-    )
-
+    model = models.resnet18(weights=None)
+    model.fc = torch.nn.Linear(model.fc.in_features, 2)
+    
     model.load_state_dict(torch.load("model.pth", map_location="cpu"))
     model.eval()
     return model

@@ -6,11 +6,31 @@ import requests
 from io import BytesIO
 from torchvision import models
 
+# ===== CSS =====
+st.markdown("""
+<style>
+.skeleton {
+    animation: pulse 1.2s infinite;
+    background: linear-gradient(90deg, #1f1f1f 25%, #2f2f2f 50%, #1f1f1f 75%);
+    background-size: 200% 100%;
+    border-radius: 16px;
+    height: 320px;
+    margin-top: 10px;
+}
+
+@keyframes pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ===== CONFIG =====
 MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
 CLASSES = ["Batman", "Superman"]
 
-st.set_page_config(page_title="Batman vs Superman AI", layout="centered")
+st.markdown("# 🦇 Batman vs Superman AI")
+st.caption("Classificador de imagens com Deep Learning (ResNet18)")
 
 # ===== DARK STYLE =====
 st.markdown("""
@@ -54,18 +74,22 @@ transform = transforms.Compose([
 
 # ===== HEADER =====
 st.title("🦇 Batman vs Superman AI")
-st.markdown("Upload, cole ou use uma URL de imagem.")
+st.markdown("Upload ou use uma URL de imagem.")
 
 # ===== INPUTS =====
-col1, col2 = st.columns(2)
+st.subheader("📥 Entrada de imagem")
 
-uploaded_file = col1.file_uploader("📂 Upload", type=["jpg", "png", "jpeg"])
-image_url = col2.text_input("🌐 URL")
+uploaded_file = st.file_uploader(
+    "Arraste ou selecione uma imagem",
+    type=["jpg", "png", "jpeg"]
+)
 
+image_url = st.text_input("Ou cole a URL da imagem")
 
 # ===== CLEAR BUTTON =====
 if st.button("🧹 Limpar histórico"):
     st.session_state.history = []
+    st.rerun()
 
 image = None
 
@@ -74,37 +98,66 @@ if uploaded_file:
 
 elif image_url:
     try:
-        response = requests.get(image_url, timeout=10)
-        image = Image.open(BytesIO(response.content)).convert("RGB")
+        with st.spinner("🌐 Carregando imagem..."):
+            response = requests.get(image_url, timeout=10)
+            image = Image.open(BytesIO(response.content)).convert("RGB")
     except:
-        st.error("Erro ao carregar imagem da URL")
-
-elif pasted_image:
-    image = Image.open(pasted_image).convert("RGB")
+        st.error("❌ Erro ao carregar imagem da URL")
 
 # ===== PREDICTION =====
 if image:
-    st.image(image, caption="Imagem carregada", use_column_width=True)
-
     img = transform(image).unsqueeze(0)
 
-    with st.spinner("🔍 Analisando imagem..."):
+    col1, col2 = st.columns([1, 1])
+
+    # ===== IMAGEM =====
+    with col1:
+        st.image(image, caption="Imagem carregada", use_column_width=True)
+
+    # ===== RESULTADO =====
+    with col2:
+        placeholder = st.empty()
+        placeholder.markdown('<div class="skeleton"></div>', unsafe_allow_html=True)
+
         with torch.no_grad():
             outputs = model(img)
             probs = torch.nn.functional.softmax(outputs[0], dim=0)
             confidence, predicted = torch.max(probs, 0)
 
-    result = CLASSES[predicted.item()]
-    conf = confidence.item() * 100
+        placeholder.empty()
 
-    # ===== RESULT =====
-    st.success(f"🧠 {result}")
-    st.info(f"📊 Confiança: {conf:.2f}%")
+        result = CLASSES[predicted.item()]
+        conf = confidence.item() * 100
 
-    st.subheader("📈 Probabilidades")
-    for i, cls in enumerate(CLASSES):
-        st.progress(float(probs[i]))
-        st.write(f"{cls}: {probs[i]*100:.2f}%")
+        # ===== COR DINÂMICA =====
+        if conf > 80:
+            color = "#00FF9C"
+            status = "Alta confiança"
+        elif conf > 60:
+            color = "#FFD166"
+            status = "Média confiança"
+        else:
+            color = "#FF4B4B"
+            status = "Baixa confiança"
+
+        st.markdown(f"""
+        <div style="
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 6px solid {color};
+            margin-top: 10px;
+        ">
+        <h3>🧠 Resultado: {result}</h3>
+        <p>📊 Confiança: {conf:.2f}%</p>
+        <p style="color:{color}; font-weight:bold;">{status}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.subheader("📈 Probabilidades")
+        for i, cls in enumerate(CLASSES):
+            st.markdown(f"**{cls} — {probs[i]*100:.2f}%**")
+            st.progress(float(probs[i]))
 
     # ===== SAVE HISTORY =====
     st.session_state.history.append((image, result, conf))
@@ -113,7 +166,7 @@ if image:
 if st.session_state.history:
     st.subheader("🕓 Histórico")
 
-    for i, (img, res, conf) in enumerate(reversed(st.session_state.history[-5:])):
-        col1, col2 = st.columns([1,2])
-        col1.image(img, width=100)
+    for i, (img_hist, res, conf) in enumerate(reversed(st.session_state.history[-5:])):
+        col1, col2 = st.columns([1, 2])
+        col1.image(img_hist, width=100)
         col2.write(f"**{res}** ({conf:.1f}%)")

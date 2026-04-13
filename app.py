@@ -28,71 +28,86 @@ st.markdown("""
 # ===== CSS =====
 st.markdown("""
 <style>
+
+/* ===== BASE ===== */
 .stApp {
-    background-color: #F9FAFB;
-    color: #111827;
+    background-color: #F8FAFC;
+    color: #0F172A;
 }
 
+/* TITULOS */
+h1, h2, h3 {
+    color: #0F172A;
+}
+
+/* ===== UPLOADER ===== */
 section[data-testid="stFileUploader"] {
-    background: white !important;
-    border: 1px dashed #D1D5DB !important;
+    background: #FFFFFF !important;
+    border: 1px dashed #CBD5F5 !important;
     border-radius: 12px !important;
     padding: 14px !important;
 }
 
 section[data-testid="stFileUploader"]:hover {
-    border: 1px dashed #3B82F6 !important;
+    border: 1px dashed #2563EB !important;
 }
 
+/* ===== INPUT ===== */
 input {
-    background: white !important;
-    border: 1px solid #D1D5DB !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 10px !important;
+    color: #0F172A !important;
     padding: 12px !important;
 }
 
+input:focus {
+    border: 1px solid #2563EB !important;
+}
+
+/* ===== BOTÃO ===== */
 .stButton>button {
-    background: #3B82F6;
+    background: #2563EB;
     color: white;
+    font-weight: 600;
     border-radius: 10px;
     border: none;
-    padding: 10px 18px;
 }
 
+.stButton>button:hover {
+    background: #1D4ED8;
+}
+
+/* ===== CARD ===== */
 .result-card {
-    background: white;
+    background: #FFFFFF;
     border-radius: 14px;
     padding: 20px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid #E2E8F0;
 }
 
+/* ===== PROGRESS ===== */
 .progress-bar {
-    background: #E5E7EB;
+    background: #E2E8F0;
     border-radius: 6px;
     height: 10px;
-    margin-bottom: 12px;
 }
 
 .progress-fill {
-    height: 100%;
-    background: #3B82F6;
+    background: #2563EB;
 }
 
+/* ===== SKELETON ===== */
 .skeleton {
     animation: pulse 1.2s infinite;
-    background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
     background-size: 200% 100%;
     border-radius: 12px;
     height: 280px;
 }
 
-@keyframes pulse {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
 </style>
 """, unsafe_allow_html=True)
-
 # ===== CONFIG =====
 MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
 CLASSES = ["Batman", "Superman"]

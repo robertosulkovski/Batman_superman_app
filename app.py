@@ -24,8 +24,35 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ===== CSS LIMPO =====
-/* INPUT WRAPPER */
+# ===== CSS =====
+st.markdown("""
+<style>
+
+/* FUNDO */
+.stApp {
+    background-color: #F1F5F9;
+    color: #0F172A;
+}
+
+/* TITULOS */
+h1, h2, h3 {
+    color: #0F172A;
+}
+
+/* TEXTO */
+p {
+    color: #475569;
+}
+
+/* UPLOADER */
+section[data-testid="stFileUploader"] {
+    background: #FFFFFF !important;
+    border: 1px dashed #CBD5E1 !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+}
+
+/* INPUT */
 .stTextInput > div {
     background: #FFFFFF !important;
     border: 1px solid #CBD5E1 !important;
@@ -33,21 +60,7 @@ st.markdown("""
     padding: 6px !important;
 }
 
-/* INPUT INTERNO */
-.stTextInput input {
-    background: transparent !important;
-    border: none !important;
-}
-
-/* CAIXA DA URL */
-.stTextInput {
-    background: #FFFFFF !important;
-    border-radius: 12px !important;
-    border: 1px solid #CBD5E1 !important;
-    padding: 12px !important;
-}
-
-/* FORM BOX (IMPORTANTE) */
+/* FORM */
 div[data-testid="stForm"] {
     background: #FFFFFF;
     padding: 16px;
@@ -55,6 +68,57 @@ div[data-testid="stForm"] {
     border: 1px solid #E2E8F0;
 }
 
+/* BOTÕES (IGUAIS) */
+.stButton>button {
+    background: #2563EB;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border: none;
+}
+
+.stButton>button:hover {
+    background: #1D4ED8;
+}
+
+/* CARD RESULTADO */
+.result-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #E2E8F0;
+}
+
+/* BARRA */
+.progress-bar {
+    background: #E2E8F0;
+    border-radius: 6px;
+    height: 10px;
+}
+
+.progress-fill {
+    background: #2563EB;
+    height: 100%;
+    border-radius: 6px;
+}
+
+/* SKELETON */
+.skeleton {
+    animation: pulse 1.2s infinite;
+    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+    background-size: 200% 100%;
+    border-radius: 12px;
+    height: 250px;
+}
+
+@keyframes pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 # ===== CONFIG =====
 MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
@@ -188,7 +252,6 @@ if image:
             </div>
             """, unsafe_allow_html=True)
 
-    # evitar duplicação
     if not st.session_state.history or st.session_state.history[-1][0] != image:
         st.session_state.history.append((image, result, conf))
 

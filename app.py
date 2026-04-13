@@ -9,27 +9,14 @@ import os
 
 st.set_page_config(layout="centered")
 
-# ===== CSS LIGHT THEME =====
+# ===== CSS =====
 st.markdown("""
 <style>
-
-/* ===== BASE ===== */
 .stApp {
     background-color: #F9FAFB;
     color: #111827;
-    font-family: 'Inter', sans-serif;
 }
 
-/* TITULOS */
-h1 {
-    font-weight: 700;
-}
-
-h2, h3 {
-    color: #111827;
-}
-
-/* ===== FILE UPLOADER ===== */
 section[data-testid="stFileUploader"] {
     background: white !important;
     border: 1px dashed #D1D5DB !important;
@@ -41,34 +28,21 @@ section[data-testid="stFileUploader"]:hover {
     border: 1px dashed #3B82F6 !important;
 }
 
-/* ===== INPUT ===== */
 input {
     background: white !important;
     border: 1px solid #D1D5DB !important;
     border-radius: 10px !important;
-    color: #111827 !important;
     padding: 12px !important;
 }
 
-input:focus {
-    border: 1px solid #3B82F6 !important;
-}
-
-/* ===== BOTÃO ===== */
 .stButton>button {
     background: #3B82F6;
     color: white;
-    font-weight: 600;
     border-radius: 10px;
     border: none;
     padding: 10px 18px;
 }
 
-.stButton>button:hover {
-    background: #2563EB;
-}
-
-/* ===== CARD ===== */
 .result-card {
     background: white;
     border-radius: 14px;
@@ -76,11 +50,9 @@ input:focus {
     border: 1px solid #E5E7EB;
 }
 
-/* ===== PROGRESS ===== */
 .progress-bar {
     background: #E5E7EB;
     border-radius: 6px;
-    overflow: hidden;
     height: 10px;
     margin-bottom: 12px;
 }
@@ -90,7 +62,6 @@ input:focus {
     background: #3B82F6;
 }
 
-/* ===== SKELETON ===== */
 .skeleton {
     animation: pulse 1.2s infinite;
     background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
@@ -103,7 +74,6 @@ input:focus {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -147,7 +117,11 @@ transform = transforms.Compose([
 st.subheader("📥 Entrada de imagem")
 
 uploaded_file = st.file_uploader("Upload imagem", type=["jpg", "png", "jpeg"])
-image_url = st.text_input("Ou cole a URL")
+
+# ===== URL FORM (ENTER FUNCIONA) =====
+with st.form("url_form"):
+    image_url = st.text_input("Ou cole a URL da imagem")
+    submit_url = st.form_submit_button("🔎 Carregar imagem")
 
 # ===== CLEAR =====
 if st.button("🧹 Limpar histórico"):
@@ -155,13 +129,12 @@ if st.button("🧹 Limpar histórico"):
     st.session_state.image = None
     st.rerun()
 
-image = st.session_state.image
-
+# ===== PRIORIDADE: UPLOAD > URL =====
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
     st.session_state.image = image
 
-elif image_url:
+elif submit_url and image_url:
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(image_url, headers=headers, timeout=10)
@@ -172,8 +145,11 @@ elif image_url:
         else:
             st.error("❌ URL inválida")
 
-    except:
+    except Exception as e:
         st.error("❌ Erro ao carregar imagem")
+
+# ===== USAR IMAGEM SALVA =====
+image = st.session_state.image
 
 # ===== PREDICTION =====
 if image:
@@ -228,7 +204,9 @@ if image:
             </div>
             """, unsafe_allow_html=True)
 
-    st.session_state.history.append((image, result, conf))
+    # evitar duplicação no histórico
+    if not st.session_state.history or st.session_state.history[-1][0] != image:
+        st.session_state.history.append((image, result, conf))
 
 # ===== HISTORY =====
 if st.session_state.history:

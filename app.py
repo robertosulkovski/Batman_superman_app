@@ -38,6 +38,49 @@ st.markdown("""
     background-color: #262730;
     color: white;
 }
+
+/* ===== FILE UPLOADER ===== */
+section[data-testid="stFileUploader"] {
+    background-color: #1e1e1e;
+    border: 1px solid #2f2f2f;
+    border-radius: 12px;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+section[data-testid="stFileUploader"]:hover {
+    border: 1px solid #00FF9C;
+}
+
+/* interno */
+section[data-testid="stFileUploader"] div {
+    background-color: #1e1e1e !important;
+    color: white !important;
+}
+
+/* botão uploader */
+section[data-testid="stFileUploader"] button {
+    background-color: #262730 !important;
+    color: white !important;
+    border-radius: 8px;
+}
+
+/* ===== INPUT URL ===== */
+input {
+    background-color: #1e1e1e !important;
+    color: white !important;
+    border: 1px solid #2f2f2f !important;
+    border-radius: 10px !important;
+}
+
+input::placeholder {
+    color: #888 !important;
+}
+
+input:focus {
+    border: 1px solid #00FF9C !important;
+    outline: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -47,7 +90,6 @@ CLASSES = ["Batman", "Superman"]
 
 st.title("🦇 Batman vs Superman AI")
 st.caption("Classificador de imagens com Deep Learning (ResNet18)")
-
 st.markdown("Upload ou use uma URL de imagem.")
 
 # ===== SESSION STATE =====
@@ -118,11 +160,9 @@ if image:
 
     col1, col2 = st.columns([1, 1])
 
-    # ===== IMAGEM =====
     with col1:
         st.image(image, caption="Imagem carregada", use_column_width=True)
 
-    # ===== RESULTADO =====
     with col2:
         placeholder = st.empty()
         placeholder.markdown('<div class="skeleton"></div>', unsafe_allow_html=True)
@@ -137,7 +177,6 @@ if image:
         result = CLASSES[predicted.item()]
         conf = confidence.item() * 100
 
-        # ===== COR DINÂMICA =====
         if conf > 80:
             color = "#00FF9C"
             status = "Alta confiança"
@@ -164,10 +203,25 @@ if image:
 
         st.subheader("📈 Probabilidades")
         for i, cls in enumerate(CLASSES):
-            st.markdown(f"**{cls} — {probs[i]*100:.2f}%**")
-            st.progress(float(probs[i]))
+            percent = probs[i] * 100
+            st.markdown(f"""
+            <div style="margin-bottom: 10px;">
+                <b>{cls} — {percent:.2f}%</b>
+                <div style="
+                    background: #2a2a2a;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    height: 12px;
+                ">
+                    <div style="
+                        width: {percent}%;
+                        background: linear-gradient(90deg, #00FF9C, #00CFFF);
+                        height: 100%;
+                    "></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    # ===== SAVE HISTORY =====
     st.session_state.history.append((image, result, conf))
 
 # ===== HISTORY =====

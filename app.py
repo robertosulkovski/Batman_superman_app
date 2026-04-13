@@ -9,6 +9,8 @@ import os
 
 st.set_page_config(layout="centered")
 
+st.info("⚠️ Este modelo foi treinado com imagens específicas. Resultados podem variar para desenhos ou fotos reais.")
+
 # ===== CSS =====
 st.markdown("""
 <style>

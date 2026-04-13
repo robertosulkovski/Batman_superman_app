@@ -5,10 +5,19 @@ from PIL import Image
 import requests
 from io import BytesIO
 from torchvision import models
+import os
+
+st.set_page_config(layout="centered")
 
 # ===== CSS =====
 st.markdown("""
 <style>
+.stApp {
+    background-color: #0E1117;
+    color: white;
+}
+
+/* Skeleton */
 .skeleton {
     animation: pulse 1.2s infinite;
     background: linear-gradient(90deg, #1f1f1f 25%, #2f2f2f 50%, #1f1f1f 75%);
@@ -22,23 +31,8 @@ st.markdown("""
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
-</style>
-""", unsafe_allow_html=True)
 
-# ===== CONFIG =====
-MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
-CLASSES = ["Batman", "Superman"]
-
-st.markdown("# 🦇 Batman vs Superman AI")
-st.caption("Classificador de imagens com Deep Learning (ResNet18)")
-
-# ===== DARK STYLE =====
-st.markdown("""
-<style>
-body {
-    background-color: #0E1117;
-    color: white;
-}
+/* Botão */
 .stButton>button {
     border-radius: 10px;
     background-color: #262730;
@@ -47,6 +41,15 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
+# ===== CONFIG =====
+MODEL_URL = "https://huggingface.co/robertosulkovski/Batman_Superman_model/resolve/main/model.pth"
+CLASSES = ["Batman", "Superman"]
+
+st.title("🦇 Batman vs Superman AI")
+st.caption("Classificador de imagens com Deep Learning (ResNet18)")
+
+st.markdown("Upload ou use uma URL de imagem.")
+
 # ===== SESSION STATE =====
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -54,9 +57,10 @@ if "history" not in st.session_state:
 # ===== LOAD MODEL =====
 @st.cache_resource
 def load_model():
-    response = requests.get(MODEL_URL, timeout=30)
-    with open("model.pth", "wb") as f:
-        f.write(response.content)
+    if not os.path.exists("model.pth"):
+        response = requests.get(MODEL_URL, timeout=30)
+        with open("model.pth", "wb") as f:
+            f.write(response.content)
 
     model = models.resnet18(weights=None)
     model.fc = torch.nn.Linear(model.fc.in_features, 2)
@@ -71,10 +75,6 @@ transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor()
 ])
-
-# ===== HEADER =====
-st.title("🦇 Batman vs Superman AI")
-st.markdown("Upload ou use uma URL de imagem.")
 
 # ===== INPUTS =====
 st.subheader("📥 Entrada de imagem")
@@ -99,10 +99,18 @@ if uploaded_file:
 elif image_url:
     try:
         with st.spinner("🌐 Carregando imagem..."):
-            response = requests.get(image_url, timeout=10)
-            image = Image.open(BytesIO(response.content)).convert("RGB")
+            headers = {"User-Agent": "Mozilla/5.0"}
+            response = requests.get(image_url, headers=headers, timeout=10)
+
+            if response.status_code != 200:
+                st.error("❌ URL inválida ou inacessível")
+            elif "image" not in response.headers.get("Content-Type", ""):
+                st.error("❌ URL não contém uma imagem válida")
+            else:
+                image = Image.open(BytesIO(response.content)).convert("RGB")
+
     except:
-        st.error("❌ Erro ao carregar imagem da URL")
+        st.error("❌ Não foi possível carregar a imagem")
 
 # ===== PREDICTION =====
 if image:
@@ -166,7 +174,7 @@ if image:
 if st.session_state.history:
     st.subheader("🕓 Histórico")
 
-    for i, (img_hist, res, conf) in enumerate(reversed(st.session_state.history[-5:])):
+    for img_hist, res, conf in reversed(st.session_state.history[-5:]):
         col1, col2 = st.columns([1, 2])
         col1.image(img_hist, width=100)
         col2.write(f"**{res}** ({conf:.1f}%)")

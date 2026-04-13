@@ -29,6 +29,110 @@ st.markdown("""
 st.markdown("""
 <style>
 
+/* ===== FUNDO ===== */
+.stApp {
+    background-color: #F1F5F9;
+    color: #0F172A;
+}
+
+/* ===== TITULO ===== */
+h1 {
+    font-weight: 700;
+}
+
+/* ===== SUBTEXTO ===== */
+p {
+    color: #475569;
+}
+
+/* ===== UPLOADER ===== */
+section[data-testid="stFileUploader"] {
+    background: #FFFFFF !important;
+    border: 1px dashed #CBD5E1 !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+    transition: 0.2s;
+}
+
+section[data-testid="stFileUploader"]:hover {
+    border: 1px dashed #2563EB !important;
+    background: #F8FAFC !important;
+}
+
+/* REMOVE CINZA INTERNO */
+section[data-testid="stFileUploader"] div {
+    background: transparent !important;
+}
+
+/* ===== INPUT URL ===== */
+input {
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 10px !important;
+    padding: 12px !important;
+    color: #0F172A !important;
+}
+
+input:focus {
+    border: 1px solid #2563EB !important;
+    outline: none !important;
+}
+
+/* ===== BOTÃO ===== */
+.stButton>button {
+    background: #2563EB;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    border: none;
+}
+
+.stButton>button:hover {
+    background: #1D4ED8;
+}
+
+/* ===== CARD INPUT (URL BOX) ===== */
+.stTextInput {
+    background: #FFFFFF;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+}
+
+/* ===== RESULT CARD ===== */
+.result-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ===== PROGRESS ===== */
+.stProgress > div > div {
+    background-color: #2563EB !important;
+}
+
+/* ===== AVISO ===== */
+.warning-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* ===== REMOVE FUNDO CINZA DO STREAMLIT ===== */
+.block-container {
+    padding-top: 2rem;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
 /* ===== BASE ===== */
 .stApp {
     background-color: #F8FAFC;

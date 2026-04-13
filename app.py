@@ -9,7 +9,21 @@ import os
 
 st.set_page_config(layout="centered")
 
-st.info("⚠️ Este modelo foi treinado com imagens específicas. Resultados podem variar para desenhos ou fotos reais.")
+#Aviso
+st.markdown("""
+<div style="
+    background: #FFF3CD;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #FFE69C;
+    color: #664D03;
+    font-size: 14px;
+    margin-bottom: 15px;
+">
+⚠️ <b>Aviso:</b> Este modelo pode ter menor precisão com desenhos, HQs ou imagens fora do padrão.
+</div>
+""", unsafe_allow_html=True)
+
 
 # ===== CSS =====
 st.markdown("""

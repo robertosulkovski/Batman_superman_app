@@ -12,6 +12,25 @@ CLASSES = ["Batman", "Superman"]
 
 st.set_page_config(page_title="Batman vs Superman AI", layout="centered")
 
+# ===== DARK STYLE =====
+st.markdown("""
+<style>
+body {
+    background-color: #0E1117;
+    color: white;
+}
+.stButton>button {
+    border-radius: 10px;
+    background-color: #262730;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ===== SESSION STATE =====
+if "history" not in st.session_state:
+    st.session_state.history = []
+
 # ===== LOAD MODEL =====
 @st.cache_resource
 def load_model():
@@ -33,22 +52,24 @@ transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-# ===== UI HEADER =====
-st.title("🦇 Batman vs Superman Classifier")
-st.markdown("Upload, cole (Ctrl+V) ou use uma URL de imagem.")
+# ===== HEADER =====
+st.title("🦇 Batman vs Superman AI")
+st.markdown("Upload, cole ou use uma URL de imagem.")
 
 # ===== INPUTS =====
 col1, col2 = st.columns(2)
 
-uploaded_file = col1.file_uploader("📂 Upload imagem", type=["jpg", "png", "jpeg"])
-image_url = col2.text_input("🌐 URL da imagem")
+uploaded_file = col1.file_uploader("📂 Upload", type=["jpg", "png", "jpeg"])
+image_url = col2.text_input("🌐 URL")
 
-# ===== PASTE IMAGE (Ctrl+V) =====
-pasted_image = st.camera_input("📋 Cole imagem (Ctrl+V ou print)")
+pasted_image = st.camera_input("📋 Colar imagem")
+
+# ===== CLEAR BUTTON =====
+if st.button("🧹 Limpar histórico"):
+    st.session_state.history = []
 
 image = None
 
-# prioridade: upload > url > paste
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
 
@@ -68,18 +89,32 @@ if image:
 
     img = transform(image).unsqueeze(0)
 
-    with torch.no_grad():
-        outputs = model(img)
-        probs = torch.nn.functional.softmax(outputs[0], dim=0)
+    with st.spinner("🔍 Analisando imagem..."):
+        with torch.no_grad():
+            outputs = model(img)
+            probs = torch.nn.functional.softmax(outputs[0], dim=0)
+            confidence, predicted = torch.max(probs, 0)
 
-        confidence, predicted = torch.max(probs, 0)
+    result = CLASSES[predicted.item()]
+    conf = confidence.item() * 100
 
     # ===== RESULT =====
-    st.success(f"🧠 Predição: {CLASSES[predicted.item()]}")
-    st.info(f"📊 Confiança: {confidence.item()*100:.2f}%")
+    st.success(f"🧠 {result}")
+    st.info(f"📊 Confiança: {conf:.2f}%")
 
-    # ===== PROB BARS =====
     st.subheader("📈 Probabilidades")
     for i, cls in enumerate(CLASSES):
         st.progress(float(probs[i]))
         st.write(f"{cls}: {probs[i]*100:.2f}%")
+
+    # ===== SAVE HISTORY =====
+    st.session_state.history.append((image, result, conf))
+
+# ===== HISTORY =====
+if st.session_state.history:
+    st.subheader("🕓 Histórico")
+
+    for i, (img, res, conf) in enumerate(reversed(st.session_state.history[-5:])):
+        col1, col2 = st.columns([1,2])
+        col1.image(img, width=100)
+        col2.write(f"**{res}** ({conf:.1f}%)")

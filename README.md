@@ -1,4 +1,4 @@
-## 🔗 Acesse o projeto
+## 🔗 Access the Project
 
 👉 https://batman-superman-ai.streamlit.app/
 
@@ -8,63 +8,95 @@
 
 # 🦇 Batman vs Superman AI
 
-Este projeto consiste em uma aplicação de Machine Learning capaz de classificar imagens entre Batman e Superman utilizando Deep Learning.
+This project is a Deep Learning application for image classification between Batman and Superman using PyTorch and ResNet18, with a web interface developed in Streamlit.
 
 ---
 
-## 🚀 Tecnologias utilizadas
+## 🚀 Technologies Used
 
-### 🧠 Google Colab — Treinamento do modelo
+### 🧠 Google Colab — Model Training
 
-Utilizado para treinar o modelo de classificação de imagens com PyTorch (ResNet18), processar o dataset e gerar o arquivo final do modelo (`model.pth`).
-
----
-
-### 🤗 Hugging Face — Armazenamento do modelo
-
-Responsável por hospedar o modelo treinado e disponibilizá-lo via URL para uso na aplicação.
+Used to train the image classification model with PyTorch (ResNet18), process the dataset, and generate the final model file (`model.pth`).
 
 ---
 
-### 💻 Streamlit — Interface da aplicação
+### 🤗 Hugging Face — Model Hosting
 
-Utilizado para criar a interface web, permitindo:
+Responsible for hosting the trained model and making it available via URL for use in the application:
 
-* Upload de imagens
-* Inserção de URL
-* Predição em tempo real
-* Visualização de probabilidades
+https://huggingface.co/robertosulkovski/Batman_Superman_model/blob/main/model.pth
 
 ---
 
-### 🗂️ GitHub — Versionamento de código
+### 💻 Streamlit — Application Interface
 
-Armazena o código do projeto e permite integração com o deploy automático.
+Used to create the web interface, allowing:
 
----
-
-### 🌐 Streamlit Cloud — Deploy
-
-Responsável por hospedar a aplicação e disponibilizá-la online.
-
----
-
-## 🔄 Fluxo do projeto
-
-Google Colab → Treinamento
-↓
-Hugging Face → Armazenamento do modelo
-↓
-GitHub → Código da aplicação
-↓
-Streamlit Cloud → Deploy
-↓
-Usuário → Interação com o app
+* Image upload
+* URL input
+* Real-time prediction
+* Probability visualization
 
 ---
 
-## 🎯 Resumo
+### 🗂️ GitHub — Code Version Control
 
-O modelo foi treinado no Google Colab, armazenado no Hugging Face e integrado a uma aplicação web em Streamlit, sendo disponibilizado online via Streamlit Cloud.
+Stores the project source code and enables automatic deployment integration.
+
+---
+
+### 🌐 Streamlit Cloud — Deployment
+
+Responsible for hosting the application and making it available online.
+
+---
+
+## 🧠 Model Architecture
+
+* Architecture: ResNet18
+* Framework: PyTorch
+* Training Environment: Google Colab
+* Model Hosting: Hugging Face
+* Web Interface: Streamlit
+* Deployment: Streamlit Cloud
+
+---
+
+## 📚 Training Notebook
+
+The complete model training pipeline is available in:
+
+`train_resnet18_batman_vs_superman.ipynb`
+
+The notebook includes:
+
+* Dataset processing
+* Data loading with PyTorch
+* Model training using ResNet18
+* Loss function and optimizer configuration
+* Model validation
+* Model weight export (`model.pth`)
+
+---
+
+## 🔄 Project Workflow
+
+Google Colab → Model Training  
+↓  
+Hugging Face → Model Hosting  
+↓  
+GitHub → Application Source Code  
+↓  
+Streamlit Cloud → Deployment  
+↓  
+User → Application Interaction  
+
+---
+
+## 🎯 Summary
+
+The model was trained in Google Colab, hosted on Hugging Face, and integrated into a Streamlit web application, which is deployed online through Streamlit Cloud.
+
+The complete training notebook is included in the repository to ensure reproducibility and provide transparency into the Deep Learning pipeline.
 
 ---
